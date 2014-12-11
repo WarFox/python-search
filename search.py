@@ -14,11 +14,21 @@ global_keysfound = set()
 global_splitre = '=|,|\*|\n|<'
 
 includes = ['*.xml','*.java','*.sql'] # for files only
-excludes = ['build','.idea', 'dist', 'test'] # for dirs and files
+excludes = ['build','.idea', 'dist', 'test', 'target'] # for dirs and files
 
 # transform glob patterns to regular expressions
 includes = r'|'.join([fnmatch.translate(x) for x in includes])
 excludes = r'|'.join([fnmatch.translate(x) for x in excludes]) or r'$.'
+
+'''
+closure based counter
+'''
+def initCounter(x):
+  counter = [x]
+  def inc():
+     counter[0] += 1
+     return counter[0]
+  return inc
 
 def sortItems(items):
     return sorted(items, key=lambda item: (int(item.partition(' ')[0])
@@ -73,6 +83,7 @@ def isFileNameOkay(filename):
     #found = (filename.find(exclude) != -1)
     if found == True:
       return False
+  counter()
   return True
 
 
@@ -82,7 +93,11 @@ Recursively traverse directories to get files
 def recursive_traversal(rootdir):
   global global_keysfound
   global keywords
+  global counter
+  counter = initCounter(0)
+
   print "recursivetraversal ", rootdir
+
   for path, dirs, files in os.walk(rootdir):
       
       files = [os.path.join(path, f) for f in files]
@@ -95,6 +110,7 @@ def recursive_traversal(rootdir):
 
   keywords_set = set(keywords)
   #global_keysfound = set(global_keysfound)
+  print 'Looked in', counter(), 'files'
   print 'Used: ', prettyPrint(global_keysfound)
   print 'Not used: ', prettyPrint((keywords_set - global_keysfound))
 
