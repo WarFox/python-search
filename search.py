@@ -99,11 +99,9 @@ def recursive_traversal(rootdir):
   print "recursivetraversal ", rootdir
 
   for path, dirs, files in os.walk(rootdir):
-      
       files = [os.path.join(path, f) for f in files]
       files = [f for f in files if not re.match(excludes, f)]
       files = [f for f in files if re.match(includes, f)]
-      
       for filename in files:
          if isFileNameOkay(filename):
            search(os.path.join(path, filename))
