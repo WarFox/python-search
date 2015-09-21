@@ -1,7 +1,5 @@
 #!/usr/bin/python
-import os
-import fnmatch
-import re
+import os, sys, getopt, fnmatch, re
 
 #References
 '''
@@ -112,4 +110,22 @@ def recursive_traversal(rootdir):
   print 'Used: ', prettyPrint(global_keysfound)
   print 'Not used: ', prettyPrint((keywords_set - global_keysfound))
 
-recursive_traversal(rootdir)
+def main(argv):
+  root = rootdir
+  try:
+    opts, args = getopt.getopt(argv, "r:")
+  except getopt.GetoptError:
+    print 'usage: search.py -r <root>'
+    sys.exit(2)
+
+  for opt, arg in opts:
+    if opt in ("-r"):
+      root = arg
+    else:
+     print 'search.py -r <rootdir>'
+     sys.exit(1)
+  recursive_traversal(root)
+
+if __name__ == "__main__":
+  main(sys.argv[1:])
+
